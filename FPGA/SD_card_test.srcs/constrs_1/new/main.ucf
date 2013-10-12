@@ -1,0 +1,18 @@
+# NET "LED" LOC = "U18"; # Bank = 1, Pin name = IO_L52N_M1DQ15, 	   Sch name = LD0
+
+# clock pin for Atlys rev C board
+ NET "clk" TNM_NET = "clk" | LOC = "L15" | IOSTANDARD = "LVCMOS33"; # Bank = 1, Pin name = IO_L42P_GCLK7_M1UDM, Type = GCLK, Sch name = GCLK
+ NET "uart_tx" LOC = "B16";
+ NET "reset_switch" LOC = "T15" | IOSTANDARD = "LVCMOS33";
+ 
+ NET "sd_cs_out" LOC = "U8" | IOSTANDARD = "LVCMOS33" | DRIVE = "8"; # CHIP SELECT -> D3 -> IO14 -> IO14-P -> U8
+ NET "sd_mosi" LOC = "T12" | IOSTANDARD = "LVCMOS33" | DRIVE = "8"; # MOSI -> CMD -> IO6 -> IO6-P -> T12
+ NET "sd_clk_out" LOC = "R8" | IOSTANDARD = "LVCMOS33" | DRIVE = "8"; # CLOCK -> CLK -> IO12 -> IO12-P -> R8
+ NET "sd_miso" LOC = "M10" | IOSTANDARD = "LVCMOS33"; # MISO -> D0 -> IO8 -> IO8-P -> M10
+ NET "sd_power" LOC = "U16" | IOSTANDARD = "LVCMOS33" | DRIVE = "8"; # POWER -> IO1 -> IO1-P -> U16
+ 
+ NET "read_strobe_dbg" LOC = "U15" | IOSTANDARD = "LVCMOS33" | DRIVE = "8"; # READ -> IO2 -> IO2-P -> U15
+ 
+ ###CONFIG VCCAUX = "3.3";
+ 
+ TIMESPEC "TS_clk" = PERIOD "clk" 10 ns HIGH 50%; 

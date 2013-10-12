@@ -1,0 +1,693 @@
+                     ; UART is 115,200 baud.
+                     ;
+                     ;
+                     ; UART Status
+                     ; -----------
+                     CONSTANT UART_status_port, 01        ; Read status
+                     CONSTANT UART_Tx_full, 00000100'b    ; full - bit2
+                     ;
+                     ; UART Write
+                     ; ----------
+                     CONSTANT UART_TX6_output_port, 01
+                     ;
+                     ; Reset UART buffers (Constant Optimised Port)
+                     ; --------------------------------------------
+                     CONSTANT reset_UART_port, 00
+                     CONSTANT UART_tx_reset, 00000001'b   ; uart_tx6 reset - bit0
+                     CONSTANT UART_tx_operate, 00000000'b ; uart_tx not reset - bit0
+                     ;
+                     ;
+                     ;
+                     ; SPI Stuff
+                     ;----------
+                     ;
+                     ; The following CONSTANT directives identify which bits of each 8-bit port are
+                     ; assigned to each signal. These constants and the hardware should NOT be modified
+                     ; unless these is a compelling reason to do so. In particular, the serial data input
+                     ; and serial data output have both been assigned to Bit7 as this simplifies the PSM
+                     ; code when implementing the most significant bit (MSB) protocol of the serial
+                     ; communication.
+                     ;
+                     CONSTANT spi_clk, 00000001'b         ;   spi_clk - bit0 (SPI_output_port)
+                     CONSTANT spi_cs_b, 00000010'b        ;  spi_cs_b - bit1 (SPI_output_port)
+                     CONSTANT spi_mosi, 10000000'b        ;  spi_mosi - bit7 (SPI_output_port)
+                     CONSTANT spi_miso, 10000000'b        ;  spi_miso - bit7 (SPI_data_in_port)
+                     ;
+                     ; SPI Ports
+                     ; ---------
+                     CONSTANT SPI_output_port, 00
+                     CONSTANT SPI_data_in_port, 00        ; Read serial data from SPI Flash
+					 ;
+					 ; Scratch Pad Memory Locations
+					 ; ----------------------------
+					 CONSTANT block_read_delegate_low, 3E
+					 CONSTANT block_read_delegate_high, 3F
+                     ;
+                     ;
+                     ;------------------------------
+                     ; PROGRAM START
+                     ;------------------------------
+                     ;
+					 ; Unpower the card
+					 CALL sd_power_off
+                     ;
+                     ; Simple test of UART
+                     CALL reset_UART_macros
+                     CALL delay_quarter_sec
+                     LOAD sF, "H"
+                     CALL UART_TX
+                     LOAD sF, "i"
+                     CALL UART_TX
+                     LOAD sF, CR
+                     CALL UART_TX
+                     ;
+                     ; Complex test of UART
+                     ; Load the address of the Hello string into registers
+                     LOAD sA, Hello'lower
+                     LOAD sB, Hello'upper
+                     CALL send_string
+					 LOAD sD, 00
+					 CALL send_byte_as_hex
+					 LOAD sD, 99
+					 CALL send_byte_as_hex
+					 LOAD sD, AA
+					 CALL send_byte_as_hex
+					 LOAD sD, BB
+					 CALL send_byte_as_hex
+					 LOAD sD, FF
+					 CALL send_byte_as_hex
+					 LOAD sF, CR
+                     CALL UART_TX
+					 ;
+					 ; Power on the card
+					 CALL sd_power_on
+					 LOAD s5, FF
+		power_debug: LOAD s2, FF
+					 CALL SPI_tx_rx
+					 LOAD sD, s2
+					 CALL send_byte_as_string
+					 LOAD sF, CR
+                     CALL UART_TX
+					 SUB s5, 01
+					 JUMP NZ, power_debug
+					 
+                     ;
+                     ; Let card initialise. At least 74 clock cycles while CS is high and MOSI is high.
+                     LOAD s1, 80'd                          ; Will actually do 80 clocks
+        init_clocks: 
+                     LOAD s0, 10000010'b                  ; mosi=1, card disabled
+                     CALL SPI_clock_pulse
+                     SUB s1, 01
+                     JUMP NZ, init_clocks
+                     ;
+                     ; Debug out - we're going to send CMD0.
+					 LOAD sA, SendingCmd'lower
+					 LOAD sB, SendingCmd'upper
+					 CALL send_string
+					 LOAD sF, "0"
+					 CALL UART_TX
+					 LOAD sF, CR
+					 CALL UART_TX
+					 ; Now that card is active, send CMD0 to put card into SPI mode.
+                     LOAD s2, 40
+                     CALL SPI_tx_rx
+                     LOAD s2, 00
+                     CALL SPI_tx_rx
+                     LOAD s2, 00
+                     CALL SPI_tx_rx
+                     LOAD s2, 00
+                     CALL SPI_tx_rx
+                     LOAD s2, 00
+                     CALL SPI_tx_rx
+                     LOAD s2, 95
+                     CALL SPI_tx_rx
+                     ;
+                     ; Read the status byte. Halts if it fails.
+                     CALL read_r1_init
+                     CALL SPI_disable
+					 ;
+					 ; Debug out - we're going to send CMD8.
+					 LOAD sA, SendingCmd'lower
+					 LOAD sB, SendingCmd'upper
+					 CALL send_string
+					 LOAD sF, "8"
+					 CALL UART_TX
+					 LOAD sF, CR
+					 CALL UART_TX
+                     ; Send CMD8 to verify voltage
+					 LOAD s2, 01001000'b				; 0,1, 6 bits of cmd index
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; arg bits 31:24 (reserved)
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; arg bits 23:16 (reserved)
+					 CALL SPI_tx_rx
+					 LOAD s2, 00000001'b				; arg bits 15:8 (reserved and 3.3v code)
+					 CALL SPI_tx_rx
+					 LOAD s2, 10101010'b				; arg bits 7:0 (arbitrary check pattern)
+					 CALL SPI_tx_rx
+					 LOAD s2, 87						; CRC and end bit
+					 CALL SPI_tx_rx
+					 ;
+					 ; Read the R7 response.
+					 ; Starts with a normal R1. Halts if it fails.
+					 CALL read_r1_init
+					 ; The rest of R7 is 4 bytes. Ignore the first two, they're boring.
+					 LOAD s2, FF
+                     CALL SPI_tx_rx
+					 LOAD s2, FF
+                     CALL SPI_tx_rx
+					 ; Third byte should be 00000001.
+					 LOAD s2, FF
+                     CALL SPI_tx_rx
+                     LOAD sA, R7Response'lower
+                     LOAD sB, R7Response'upper
+                     CALL send_string
+                     LOAD sD, s2                          ; copy s2 to sD so it will be sent
+                     CALL send_byte_as_string
+					 LOAD sF, CR
+                     CALL UART_TX
+					 ; Was byte 3 as expected?
+					 TEST s2, 00000001'b
+					 JUMP NC, cmd8_end_fail
+					 ; Fourth byte should be 10101010 (check pattern).
+					 LOAD s2, FF
+                     CALL SPI_tx_rx
+                     LOAD sA, R7Response'lower
+                     LOAD sB, R7Response'upper
+                     CALL send_string
+                     LOAD sD, s2                          ; copy s2 to sD so it will be sent
+                     CALL send_byte_as_string
+					 LOAD sF, CR
+                     CALL UART_TX
+					 ; Was byte 4 as expected?
+					 COMPARE s2, 10101010'b
+					 JUMP Z, cmd8_all_success
+					 ; Fail handler
+	  cmd8_end_fail: LOAD sA, FatalExpectResp'lower
+                     LOAD sB, FatalExpectResp'upper
+                     CALL send_string
+					 CALL HALT
+					 ;
+   cmd8_all_success: CALL SPI_disable
+					 ; Debug out - we're going to send CMD58
+                     LOAD sA, SendingCmd'lower
+					 LOAD sB, SendingCmd'upper
+					 CALL send_string
+					 LOAD sF, "5"
+					 CALL UART_TX
+					 LOAD sF, "8"
+					 CALL UART_TX
+					 LOAD sF, CR
+					 CALL UART_TX
+                     ; Send CMD58 to verify voltage and get card type (SDSC or SDHC)
+					 LOAD s2, 01111010'b				; 0,1, 6 bits of cmd index
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; stuff bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; stuff bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; stuff bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; stuff bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; CRC, ignored
+					 CALL SPI_tx_rx
+					 ; Read the R3 response. First part is normal r1, halt if failed.
+					 CALL read_r1_init
+					 ; The rest of R3 is four bytes, the contents of the OCR reg.
+					 LOAD s2, FF
+					 CALL SPI_tx_rx
+					 ; First byte should start with 11, indicating the card has powered up and
+					 ; is an SDHC type.
+					 TEST s2, 11000000'b
+					 JUMP NC, card_type_ok
+					 ; Card type was not right.
+					 LOAD sA, BadCardType'lower
+					 LOAD sB, BadCardType'upper
+					 CALL send_string
+					 CALL HALT
+	   card_type_ok: ; Card type was ok.
+					 LOAD sA, GoodCardType'lower
+					 LOAD sB, GoodCardType'upper
+					 CALL send_string
+					 ; Print the second byte, it shows the supported voltages.
+					 LOAD s2, FF
+					 CALL SPI_tx_rx
+					 LOAD sD, s2
+					 CALL send_byte_as_string
+					 LOAD sF, CR
+					 CALL UART_TX
+					 ; Skip the last two bytes, boring.
+					 LOAD s2, FF
+					 CALL SPI_tx_rx
+					 LOAD s2, FF
+					 CALL SPI_tx_rx
+					 CALL SPI_disable
+					 ;
+					 ; Debug out - we're going to send ACMD41
+					 LOAD sA, SendingACmd'lower
+					 LOAD sB, SendingACmd'upper
+					 CALL send_string
+					 LOAD sF, "4"
+					 CALL UART_TX
+					 LOAD sF, "1"
+					 CALL UART_TX
+					 LOAD sF, CR
+					 CALL UART_TX
+					 ; Send ACMD41 to initialise the card.
+					 ; First need to send CMD55 to put us into AppCommand mode.
+		acmd41_loop: LOAD s2, 01110111'b				; 0,1, 6 bits of cmd index
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; stuff bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; stuff bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; stuff bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; stuff bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; CRC, ignored
+					 CALL SPI_tx_rx
+					 ; Read R1 response. Will halt if failed.
+					 CALL read_r1_init
+					 ; Send ACMD41
+					 LOAD s2, 01101001'b				; 0,1, 6 bits of cmd index
+					 CALL SPI_tx_rx
+					 LOAD s2, 01000000'b				; reserved bit, SDHC mode, reserved bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; reserved bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; reserved bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; reserved bits
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; CRC, ignored
+					 CALL SPI_tx_rx
+					 ; Special read of R1, looks for all zeros.
+		  acmd41_r1: LOAD s2, FF
+                     CALL SPI_tx_rx
+					 ; If response is 'FF' then card is busy, try to read response again.
+					 COMPARE s2, FF
+					 JUMP Z, acmd41_r1
+                     ; Write status to UART
+                     LOAD sA, R1Response'lower
+                     LOAD sB, R1Response'upper
+                     CALL send_string
+                     LOAD sD, s2                          ; copy s2 to sD so it will be sent
+                     CALL send_byte_as_string
+                     LOAD sF, CR
+                     CALL UART_TX
+					 ; If response is '00000001' then card is still initialising. Send ACMD41 again.
+					 COMPARE s2, 00000001'b
+					 JUMP Z, acmd41_loop
+                     ; Should be '00000000' if successful.
+                     COMPARE s2, 00
+                     JUMP Z, acmd41_success
+					 ; Some other kind of response, unexpected. FATAL.
+                     LOAD sA, FatalExpectResp'lower
+                     LOAD sB, FatalExpectResp'upper
+                     CALL send_string
+					 CALL HALT
+					 ; ACMD41 success. Card is ready to be used.
+	 acmd41_success: LOAD sA, CardInitialised'lower
+					 LOAD sB, CardInitialised'upper
+					 CALL send_string
+					 CALL SPI_disable
+					 ;
+					 ; Should probably do CMD58 again - technically CCS (card type SDSC or SDHC) is only valid
+					 ; after ACMD41, but bugger it.
+					 ;
+					 ; Debug out - we're going to send CMD17
+					 LOAD sA, SendingACmd'lower
+					 LOAD sB, SendingACmd'upper
+					 CALL send_string
+					 LOAD sF, "1"
+					 CALL UART_TX
+					 LOAD sF, "7"
+					 CALL UART_TX
+					 LOAD sF, CR
+					 CALL UART_TX
+					 ; Send CMD17 to read first block (512 bytes), the MBR.
+					 LOAD s2, 01010001'b				; 0,1, 6 bits of cmd index
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; block 0
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; block 0
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; block 0
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; block 0
+					 CALL SPI_tx_rx
+					 LOAD s2, 00						; CRC, ignored
+					 CALL SPI_tx_rx
+					 ; Read the status byte. Halts if it fails.
+                     CALL read_r1_idle
+					 LOAD s6, mbr_proc'lower
+					 LOAD s7, mbr_proc'upper
+					 CALL read_block_response
+					 CALL SPI_disable
+					 CALL HALT
+					 ;
+					 ;
+					 ;
+					 ;
+		   mbr_proc: ; TODO...
+					 ;
+					 ;
+					 ;
+					 ;
+					 ; Once a read block command has been sent (response 1 received and no error),
+					 ; use this function to handle the incoming block data.
+read_block_response: LOAD sA, BlockString'lower
+                     LOAD sB, BlockString'upper
+                     CALL send_string
+			rbr_pre: LOAD s2, FF
+					 CALL SPI_tx_rx
+					 COMPARE s2, FF
+					 JUMP Z, rbr_pre			; If card busy (all ones) then try again.
+					 COMPARE s2, FE
+					 JUMP Z, rbr_main			; Expect first byte to be FE (data start indicator).
+					 ; Not the expected byte = data error token. Print and halt.
+					 LOAD sA, BlockReadError'lower
+					 LOAD sB, BlockReadError'upper
+					 CALL send_string
+					 LOAD sD, s2
+					 CALL send_byte_as_string
+					 CALL HALT
+		   rbr_main: ; Want to read 512 bytes = 0x0200
+					 LOAD s8, 00				; LSB of 0x0200
+					 LOAD s9, 02				; MSB of 0x0200
+ readBlockResp_loop: LOAD s2, FF
+					 CALL SPI_tx_rx
+					 STAR s0, s2
+					 ; TODO: CONTINUE HERE
+					 ;;STAR s1, ;;;;
+					 LOAD sD, s2
+					 CALL send_byte_as_hex
+					 SUB s8, 01			; Subtract with carry to decrement through 512->0
+					 SUBCY s9, 00
+					 JUMP NZ, readBlockResp_loop
+					 ; Last two bytes are a CRC, ignore.
+					 LOAD s2, FF
+					 CALL SPI_tx_rx
+					 LOAD s2, FF
+					 CALL SPI_tx_rx
+					 ;
+					 ;
+					 ;
+                     ;
+					 ; Look for initializing R1 response (00000001).
+	   read_r1_init: LOAD s2, FF
+                     CALL SPI_tx_rx
+                     ; Write status to UART
+                     LOAD sA, R1Response'lower
+                     LOAD sB, R1Response'upper
+                     CALL send_string
+                     LOAD sD, s2                          ; copy s2 to sD so it will be sent
+                     CALL send_byte_as_string
+                     LOAD sF, CR
+                     CALL UART_TX
+                     ; If response is all ones, card is busy. Read again.
+                     COMPARE s2, FF
+					 JUMP Z, read_r1_init
+					 ; If response is initializing (00000001) then we're ok.
+					 COMPARE s2, 01
+                     RETURN Z
+					 ; Otherwise FATAL.
+                     LOAD sA, FatalExpectResp'lower
+                     LOAD sB, FatalExpectResp'upper
+                     CALL send_string
+					 CALL HALT
+					 ;
+					 ;
+					 ; Look for idle R1 response (00000000).
+	   read_r1_idle: LOAD s2, FF
+                     CALL SPI_tx_rx
+                     ; Write status to UART
+                     LOAD sA, R1Response'lower
+                     LOAD sB, R1Response'upper
+                     CALL send_string
+                     LOAD sD, s2                          ; copy s2 to sD so it will be sent
+                     CALL send_byte_as_string
+                     LOAD sF, CR
+                     CALL UART_TX
+                     ; If response is all ones, card is busy. Read again.
+                     COMPARE s2, FF
+					 JUMP Z, read_r1_idle
+					 ; If response is idle (00000000) then we're ok.
+					 COMPARE s2, 00
+                     RETURN Z
+					 ; Otherwise FATAL.
+                     LOAD sA, FatalExpectResp'lower
+                     LOAD sB, FatalExpectResp'upper
+                     CALL send_string
+					 CALL HALT
+					 ;
+					 ;
+                     ; Loads string into sF
+                     STRING Hello$, "Hello World"
+              Hello: LOAD&RETURN sF, Hello$
+                     LOAD&RETURN sF, CR
+                     LOAD&RETURN sF, NUL
+					 ;
+					 ; Load string into sF
+					 STRING BlockString$, "Block data:"
+		BlockString: LOAD&RETURN sF, BlockString$
+					 LOAD&RETURN sF, CR
+					 LOAD&RETURN sF, NUL
+					 ;
+					 ; Load string into sF
+					 STRING BlockReadError$, "Block read error: "
+	 BlockReadError: LOAD&RETURN sF, BlockReadError$
+					 LOAD&RETURN sF, NUL
+                     ;
+					 ; Load string into sF
+					 STRING SendingCmd$, "Sending CMD"
+		 SendingCmd: LOAD&RETURN sF, CR
+					 LOAD&RETURN sF, SendingCmd$
+					 LOAD&RETURN sF, NUL
+					 ;
+					 ; Load string into sF
+					 STRING SendingACmd$, "Sending ACMD"
+		 SendingACmd: LOAD&RETURN sF, CR
+					 LOAD&RETURN sF, SendingACmd$
+					 LOAD&RETURN sF, NUL
+					 ;
+                     ; Loads string into sF
+                     STRING R1Response$, "R1 response: "
+         R1Response: LOAD&RETURN sF, R1Response$
+                     LOAD&RETURN sF, NUL
+                     ;
+					 ; Loads string into sF
+					 STRING R7Response$, "R7 byte: "
+		 R7Response: LOAD&RETURN sF, R7Response$
+					 LOAD&RETURN sF, NUL
+					 ;
+					 ; Load string into sF
+					 STRING BadCardType$, "Bad card type"
+		BadCardType: LOAD&RETURN sF, BadCardType$
+					 LOAD&RETURN sF, CR
+					 LOAD&RETURN sF, NUL
+					 ;
+					 ; Load string into sF
+					 STRING GoodCardType$, "Card type OK"
+	   GoodCardType: LOAD&RETURN sF, GoodCardType$
+					 LOAD&RETURN sF, CR
+					 LOAD&RETURN sF, NUL
+					 ;
+					 ; Load string into sF
+					 STRING CardInitialised$, "Card initialised"
+    CardInitialised: LOAD&RETURN sF, CR
+					 LOAD&RETURN sF, CardInitialised$
+					 LOAD&RETURN sF, CR
+					 LOAD&RETURN sF, NUL
+					 ;
+                     ; Loads string into sF
+                     STRING FatalExpectResp$, "FATAL: did not get expected resp."
+	FatalExpectResp: LOAD&RETURN sF, FatalExpectResp$
+                     LOAD&RETURN sF, CR
+                     LOAD&RETURN sF, NUL
+                     ;
+                     ; Call this function with sA and sB set to the address of a null terminated string.
+                     ; This function will send each letter through the UART until null is reached.
+        send_string: CALL@ (sB, sA)
+                     CALL UART_TX
+                     COMPARE sF, NUL
+                     RETURN Z
+                     ADD sA, 01
+                     ADDCY sB, 00
+                     JUMP send_string
+                     ;
+                     ; Call with the byte to send in sD.
+                     ; Prints each bit as a '1' or '0'
+send_byte_as_string: LOAD sC, 08                          ; Print 8 bits
+      sbas_next_bit: LOAD sF, sD                          ; We mangle and send from sF
+                     AND sF, 10000000'b                   ; Isolate the msb
+                     RL sF                                ; Move the msb to the lsb
+                     ADD sF, 48'd                         ; Convert to ascii '0' or '1'
+                     CALL UART_TX
+                     SUB sC, 01
+                     RETURN Z                             ; return if we've done 8 bits
+                     RL sD                                ; Shift sD so we can use the next bit in the next iteration
+                     JUMP sbas_next_bit
+                     ;
+                     ;
+					 ; Call with the byte to send in sD.
+                     ; Prints each bit as a '1' or '0'
+   send_byte_as_hex: LOAD sF, sD
+					 SR0 sF
+					 SR0 sF
+					 SR0 sF
+					 SR0 sF					; isolate first 4 bits by shifting into last 4.
+					 CALL sbah_inner
+					 LOAD sF, sD
+					 AND sF, 00001111'b		; isolate last 4 bits.
+					 CALL sbah_inner
+					 RETURN
+		 sbah_inner: COMPARE sF, 0A
+					 JUMP C, sbah_num		; If bits don't represent 0-9...
+					 ADD sF, 55'd			; Convert 0A-0F to A-F char...
+					 JUMP sbah_send
+		   sbah_num: ADD sF, 48'd			; Else convert 00-09 to 0-9 char
+		  sbah_send: CALL UART_TX
+					 RETURN
+					 ;
+					 ;
+			   HALT: LOAD sF, CR
+					 CALL UART_TX
+					 LOAD sF, "H"
+					 CALL UART_TX
+					 LOAD sF, "A"
+					 CALL UART_TX
+					 LOAD sF, "L"
+					 CALL UART_TX
+					 LOAD sF, "T"
+					 CALL UART_TX
+					 LOAD sF, CR
+					 CALL UART_TX
+					 CALL SPI_disable
+		 halt_final: JUMP halt_final
+                     ;
+                     ;
+                     ;
+                     ;--------------------------------------------------------------------------------------
+                     ; Routine to Disable the SPI bus
+                     ;--------------------------------------------------------------------------------------
+                     ;
+                     ; This routine is used to disable the SPI bus as part of initialisation or to complete
+                     ; (or terminate) an SPI transaction. The routine is also used to ensure the known
+                     ; state for the SPI signals and 's0' register before the start of a new transaction.
+                     ;
+                     ; Content of 's0' and the SPI signals after execution of this routine.
+                     ;
+                     ;      spi_clk = 0 - bit0
+                     ;     spi_cs_b = 1 - bit1 (disabled)
+                     ;     spi_mosi = 1 - bit7
+                     ;
+        SPI_disable: LOAD s0, 10000010'b                  ; mosi = 1, card disable, clock low
+                     OUTPUT s0, SPI_output_port
+					 RETURN
+                     ;
+                     ;
+                     ;--------------------------------------------------------------------------------------
+                     ; Routine to Transmit and Receive One Byte
+                     ;--------------------------------------------------------------------------------------
+                     ;
+                     ; SPI communication is full duplex meaning that data can be simultaneously transmitted
+                     ; and received but in practice this capability is not widely exploited. As such, this
+                     ; routine will often be invoked only to transmit a byte or only to receive a byte; the
+                     ; fact that it actually always does both at the same time is generally ignored!
+                     ;
+                     ; This routine will be invoked as part of a complete transaction so the 'SPI_disable'
+                     ; routine should have been used at some point prior to this routine being called and
+                     ; therefore the states of the SPI signals and 's0' register contents are known. This
+                     ; routine will always drive the 'spi_cs_b' signal Low to enable communication to take
+                     ; place with the one slave device so there is no requirement to specifically enable
+                     ; the N25Q128 device at the start of a transaction but it will be necessary to
+                     ; disable it at the end.
+                     ;
+                     ; The instruction, address or data to be transmitted should be supplied in register
+                     ; 's2' and any received information will be returned in 's2' when the routine completes.
+                     ;
+                     ; The transmission and reception of each bit with an associated 'spi_clk' pulse
+                     ; is implemented by 14 instructions that take 28 clock cycles to execute. Hence the
+                     ; serial data rate is the KCPSM6 clock frequency divided by 24 (e.g. 3.57 Mbit/s with a
+                     ; 100MHz clock ). This is generally a much lower data rate than an SPI device can
+                     ; support so no special timing considerations are required. For higher data rates a
+                     ; hardware peripheral consisting of a shift register and pulse generator should be
+                     ; investigated.
+                     ;
+                     ; As a KCPSM6 is the SPI master the signal sequence implemented is as follows..
+                     ;
+					 ;   Receive data bit from spi_miso line (slave transmits on previous falling edge)
+                     ;   Transmit data bit on spi_mosi line (data set up before rising edge of spi_clk)
+                     ;   Drive spi_clk transition from low to high (slave captures data bit)
+                     ;   Drive spi_clk transition from high to low (slave outputs next data bit)
+                     ;
+    SPI_tx_rx: 		 LOAD s1, 08                          ;8-bits to transmit and receive
+ next_SPI_bit: 		 LOAD s0, s2                          ;prepare next bit to transmit
+                     AND s0, spi_mosi                     ;mosi=data, card enabled, clock low
+					 OUTPUT s0, SPI_output_port           ;output data bit ready to be used on rising clock edge
+					 INPUT s3, SPI_data_in_port           ;read input bit
+                     TEST s3, spi_miso                    ;carry flag becomes value of received bit
+                     SLA s2                               ;shift new data into result and move to next transmit bit
+                     CALL SPI_clock_pulse                 ;pulse spi_clk high then low
+                     SUB s1, 01                           ;count bits
+                     JUMP NZ, next_SPI_bit          ;repeat until last bit
+                     RETURN 
+                     ;
+                     ;
+                     ;--------------------------------------------------------------------------------------
+                     ; Routine to Generate One 'spi_clk' Pulse
+                     ;--------------------------------------------------------------------------------------
+                     ;
+                     ; This routine will generate one positive pulse on the 'spi_clk' line.
+                     ;
+                     ; Register 's0' is used and bit1 and bit7 must previously define the required states
+                     ; of 'spi_cs_b' and 'spi_mosi' which will remain unchanged.
+                     ;
+    SPI_clock_pulse: OR s0, spi_clk                       ;clock High (bit0)
+                     OUTPUT s0, SPI_output_port           ;drive clock High
+                     CALL delay_400KHz
+                     AND s0, ~spi_clk                     ;clock Low (bit0)
+                     OUTPUT s0, SPI_output_port           ;drive clock Low
+                     CALL delay_400KHz
+                     RETURN 
+                     ;
+                     ;
+					 ; Power off the sd card
+	   sd_power_off: OUTPUTK 00000000'b, 0				 ; bit 7 controls power, send to constant-port zero
+					 CALL SPI_disable
+					 RETURN
+					 ;
+					 ; Power on the sd card
+		sd_power_on: OUTPUTK 10000000'b, 0				 ; bit 7 controls power, send to constant-port zero
+					 CALL delay_quarter_sec
+					 RETURN
+                     ; Causes a delay of about 1/4 second.
+  delay_quarter_sec: LOAD sD, FF
+                     LOAD sE, FF
+                     LOAD sF, FF
+                     JUMP software_delay
+                     ;
+                     ; Causes a delay of 2500us, eg 400KHz period.
+       delay_400KHz: LOAD sD, 19
+                     LOAD sE, 00
+                     LOAD sF, 00
+                     JUMP software_delay
+                     ;
+					 ; Causes a delay of 8x 400KHz clocks.
+  delay_card_select: LOAD sD, C8
+					 LOAD sE, 00
+					 LOAD sF, 00
+					 JUMP software_delay
+					 ;
+     software_delay: LOAD sF, sF                          ;pad loop to make it 10 clock cycles (5 instructions)
+                     SUB sD, 1'd
+                     SUBCY sE, 0'd
+                     SUBCY sF, 0'd
+                     JUMP NZ, software_delay
+                     RETURN
+					 ;
+					 ;
+                     INCLUDE "uart_interface_routines.psm"
