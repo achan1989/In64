@@ -1,0 +1,5 @@
+Thumbs.db
+*.log
+*.jou
+**/tmp/
+**/wt/
