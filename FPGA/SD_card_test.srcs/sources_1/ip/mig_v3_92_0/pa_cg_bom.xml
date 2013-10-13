@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<BillOfMaterials Version="1" Minor="2">
+	<IPInstance name="ATLYS_DDR">
+		<FileSets>
+			<FileSet generator="apply_current_project_options_generator">
+				<File name="apply_current_project_options_generator.xlog" type="ignore" timestamp="Sun Oct 13 11:02:49 GMT 2013" checksum="0xFFFFFFFF">
+				</File>
+			</FileSet>
+			<FileSet generator="customization_generator">
+				<File name="ATLYS_DDR/docs/ug388.pdf" type="ignore" timestamp="Sat Jun 08 22:43:23 GMT 2013" checksum="0xCA5F1D66">
+				</File>
+				<File name="ATLYS_DDR/docs/ug416.pdf" type="ignore" timestamp="Sat Jun 08 22:43:23 GMT 2013" checksum="0xA79A545C">
+				</File>
+				<File name="ATLYS_DDR/example_design/datasheet.txt" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x314042A3">
+				</File>
+				<File name="ATLYS_DDR/example_design/log.txt" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xAFB61F42">
+				</File>
+				<File name="ATLYS_DDR/example_design/mig.prj" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x92C99508">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/create_ise.bat" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0x8214C957">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/example_top.ucf" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x33F40CD2">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/icon_coregen.xco" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0xEA80629F">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/ila_coregen.xco" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0x0774FFBD">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/ise_flow.bat" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0xC4A95A31">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/ise_run.txt" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0x35BBEC1F">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/makeproj.bat" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0xCFE64DF9">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/mem_interface_top.ut" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0xCDD0105F">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/readme.txt" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0xE0953675">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/rem_files.bat" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0x36FD8D57">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/set_ise_prop.tcl" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0xF927760C">
+				</File>
+				<File name="ATLYS_DDR/example_design/par/vio_coregen.xco" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0xD29765E5">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/example_top.vhd" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0xD3E61FDD">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/iodrp_controller.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x5A2197DD">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/iodrp_mcb_controller.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x69237401">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/mcb_raw_wrapper.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xA3623325">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/mcb_soft_calibration.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x9B8E0B5E">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/mcb_soft_calibration_top.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xC37A23BB">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/memc3_infrastructure.vhd" type="ignore" timestamp="Sun Oct 13 11:02:46 GMT 2013" checksum="0x702DFF2F">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/memc3_tb_top.vhd" type="ignore" timestamp="Sun Oct 13 11:02:46 GMT 2013" checksum="0x3C33A218">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/memc3_wrapper.vhd" type="ignore" timestamp="Sun Oct 13 11:02:46 GMT 2013" checksum="0xE2FE3C2A">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/afifo.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x26568D9A">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/cmd_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xC6EF0126">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/cmd_prbs_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x893B0F01">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/data_prbs_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x6E88FB8E">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/init_mem_pattern_ctr.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x26DEA717">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/mcb_flow_control.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xB9D71414">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/mcb_traffic_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x125A1D59">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/rd_data_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x50A90B14">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/read_data_path.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xDFA5DAF7">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/read_posted_fifo.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xBC61DAC4">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/sp6_data_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xA9170C59">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/tg_status.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x7B717096">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/v6_data_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x24F3E550">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/wr_data_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x91BCA941">
+				</File>
+				<File name="ATLYS_DDR/example_design/rtl/traffic_gen/write_data_path.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x391A16CE">
+				</File>
+				<File name="ATLYS_DDR/example_design/sim/functional/ATLYS_DDR.prj" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x32C79C96">
+				</File>
+				<File name="ATLYS_DDR/example_design/sim/functional/ddr2_model_c3.v" type="ignore" timestamp="Sun Oct 13 11:02:46 GMT 2013" checksum="0xAF612EFE">
+				</File>
+				<File name="ATLYS_DDR/example_design/sim/functional/ddr2_model_parameters_c3.vh" type="ignore" timestamp="Sun Oct 13 11:02:46 GMT 2013" checksum="0x6902BBB9">
+				</File>
+				<File name="ATLYS_DDR/example_design/sim/functional/isim.bat" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x80A9F4AA">
+				</File>
+				<File name="ATLYS_DDR/example_design/sim/functional/isim.tcl" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x02F76428">
+				</File>
+				<File name="ATLYS_DDR/example_design/sim/functional/readme.txt" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xFA4BA7C6">
+				</File>
+				<File name="ATLYS_DDR/example_design/sim/functional/sim.do" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x2D591257">
+				</File>
+				<File name="ATLYS_DDR/example_design/sim/functional/sim_tb_top.vhd" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x28AEF00A">
+				</File>
+				<File name="ATLYS_DDR/example_design/synth/example_top.lso" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xEEDE3797">
+				</File>
+				<File name="ATLYS_DDR/example_design/synth/example_top.prj" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x45A82CBA">
+				</File>
+				<File name="ATLYS_DDR/example_design/synth/mem_interface_top_synp.sdc" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0x53C2426B">
+				</File>
+				<File name="ATLYS_DDR/example_design/synth/script_synp.tcl" type="ignore" timestamp="Sun Oct 13 11:02:47 GMT 2013" checksum="0x106F5B01">
+				</File>
+				<File name="ATLYS_DDR/user_design/datasheet.txt" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x85D0C7AE">
+				</File>
+				<File name="ATLYS_DDR/user_design/log.txt" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x0D841463">
+				</File>
+				<File name="ATLYS_DDR/user_design/mig.prj" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x92C99508">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/create_ise.bat" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x8214C957">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/icon_coregen.xco" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xEA80629F">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/ila_coregen.xco" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x0774FFBD">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/ise_flow.bat" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xF74087F5">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/ise_run.txt" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x6D5461A2">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/makeproj.bat" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xCFE64DF9">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/mem_interface_top.ut" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xCDD0105F">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/readme.txt" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x8438265C">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/rem_files.bat" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x06187D8C">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/set_ise_prop.tcl" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x0ED97743">
+				</File>
+				<File name="ATLYS_DDR/user_design/par/vio_coregen.xco" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xD29765E5">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/ATLYS_DDR.prj" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x362BEE6C">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/afifo.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x26568D9A">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/cmd_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xC6EF0126">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/cmd_prbs_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x893B0F01">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/data_prbs_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x6E88FB8E">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/ddr2_model_c3.v" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xAF612EFE">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/ddr2_model_parameters_c3.vh" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x6902BBB9">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/init_mem_pattern_ctr.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x26DEA717">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/isim.bat" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x80A9F4AA">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/isim.tcl" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x02F76428">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/mcb_flow_control.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xB9D71414">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/mcb_traffic_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x125A1D59">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/memc3_tb_top.vhd" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x3C33A218">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/rd_data_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x50A90B14">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/read_data_path.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xDFA5DAF7">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/read_posted_fifo.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xBC61DAC4">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/readme.txt" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xFA4BA7C6">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/sim.do" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xF6BD5801">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/sim_tb_top.vhd" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x2853E0B3">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/sp6_data_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0xA9170C59">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/tg_status.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x7B717096">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/v6_data_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x24F3E550">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/wr_data_gen.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x91BCA941">
+				</File>
+				<File name="ATLYS_DDR/user_design/sim/write_data_path.vhd" type="ignore" timestamp="Sat Jun 08 22:43:25 GMT 2013" checksum="0x391A16CE">
+				</File>
+				<File name="ATLYS_DDR/user_design/synth/ATLYS_DDR.lso" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0xEEDE3797">
+				</File>
+				<File name="ATLYS_DDR/user_design/synth/ATLYS_DDR.prj" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x8B806A17">
+				</File>
+				<File name="ATLYS_DDR/user_design/synth/mem_interface_top_synp.sdc" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x156B9464">
+				</File>
+				<File name="ATLYS_DDR/user_design/synth/script_synp.tcl" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x5ED70C4F">
+				</File>
+				<File name="ATLYS_DDR.vho" type="vho" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x709702D0">
+				</File>
+				<File name="ATLYS_DDR_readme.txt" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x767E6053">
+				</File>
+				<File name="ATLYS_DDR_xmdf.tcl" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x4AE49AAB">
+				</File>
+				<File name="mig.prj" type="ignore" timestamp="Sun Oct 13 11:02:48 GMT 2013" checksum="0x92C99508">
+				</File>
+			</FileSet>
+			<FileSet generator="ip_xco_generator">
+				<File name="ATLYS_DDR.xco" type="xco" timestamp="Sun Oct 13 11:02:49 GMT 2013" checksum="0x7A7B493C">
+				</File>
+			</FileSet>
+			<FileSet generator="instantiation_template_generator">
+				<File name="instantiation_template_generator.xlog" type="ignore" timestamp="Sun Oct 13 11:02:50 GMT 2013" checksum="0xFFFFFFFF">
+				</File>
+			</FileSet>
+			<FileSet generator="xmdf_generator">
+				<File name="xmdf_generator.xlog" type="ignore" timestamp="Sun Oct 13 11:02:50 GMT 2013" checksum="0xFFFFFFFF">
+				</File>
+			</FileSet>
+		</FileSets>
+	</IPInstance>
+</BillOfMaterials>
+

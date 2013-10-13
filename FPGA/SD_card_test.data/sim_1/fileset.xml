@@ -15,7 +15,9 @@
       <Option Name="TopArchitecture" Val="sim_arch"/>
       <Option Name="TopRTLFile" Val="$PSRCDIR/sim_1/new/sim_main.vhd"/>
       <Option Name="TopAutoSet" Val="TRUE"/>
+      <Option Name="SimMode" Val="post-implementation"/>
       <Option Name="SrcSet" Val="sources_1"/>
+      <Option Name="NGOutputHDLFormat" Val="vhdl"/>
     </Config>
   </FileSet>
 </DARoots>
